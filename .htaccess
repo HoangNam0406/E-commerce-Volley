@@ -1,0 +1,22 @@
+# .htaccess - URL Rewriting
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # redirect unencoded space URLs to encoded path
+    RewriteCond %{REQUEST_URI} ^/E-commerce\ Volley/(.*)$ [NC]
+    RewriteRule ^.*$ /E-commerce%20Volley/%1 [R=301,L]
+
+    # Set RewriteBase to the application directory
+    RewriteBase "/Projects/E-commerce Volley/"
+
+    # Skip rewrite for existing files and directories
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Rewrite all incoming requests to index.php for front controller
+    RewriteRule ^.*$ index.php [QSA,L]
+</IfModule>
+
+# If something legitimately 404s before rewrite works, send to front controller
+ErrorDocument 404 "/Projects/E-commerce Volley/index.php"

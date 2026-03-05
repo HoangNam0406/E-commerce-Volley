@@ -1,0 +1,16 @@
+{
+    "name": "e-commerce-volley",
+    "description": "Multi-Vendor E-Commerce Platform",
+    "version": "1.0.0",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "files": [
+            "core/Autoloader.php",
+            "helpers/Helper.php"
+        ]
+    }
+}
