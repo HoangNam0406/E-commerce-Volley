@@ -31,13 +31,21 @@ class AdminDashboardController extends Controller
         $totalProducts = $productModel->countActive();
         $totalRevenue = $orderModel->getTotalRevenue();
 
+        $securityLogModel = new SecurityLog();
+        $totalAnalyzed = $securityLogModel->getTotalAnalyzed();
+        $totalBlocked = $securityLogModel->getTotalBlocked();
+        $recentBlocks = $securityLogModel->getRecentBlocks(5);
+
         $this->render('admin/dashboard', [
             'totalUsers' => $totalUsers,
             'totalCustomers' => $totalCustomers,
             'totalSellers' => $totalSellers,
             'totalOrders' => $totalOrders,
             'totalProducts' => $totalProducts,
-            'totalRevenue' => $totalRevenue
+            'totalRevenue' => $totalRevenue,
+            'totalAnalyzed' => $totalAnalyzed,
+            'totalBlocked' => $totalBlocked,
+            'recentBlocks' => $recentBlocks
         ]);
     }
 
@@ -60,6 +68,30 @@ class AdminDashboardController extends Controller
             'users' => $users,
             'pagination' => $pagination
         ]);
+    }
+
+    /**
+     * Delete user
+     */
+    public function deleteUser($userId)
+    {
+        $this->requireAdmin();
+
+        $userModel = new User();
+        $user = $userModel->findById($userId);
+
+        if (!$user) {
+            redirectWithMessage(APP_URL . '/admin/users', 'User not found', 'error');
+        }
+
+        // Prevent admin from deleting themselves
+        if ($user['id'] === $_SESSION['user_id']) {
+            redirectWithMessage(APP_URL . '/admin/users', 'You cannot delete your own account', 'error');
+        }
+
+        $userModel->delete($userId);
+
+        redirectWithMessage(APP_URL . '/admin/users', 'User deleted successfully', 'success');
     }
 
     /**

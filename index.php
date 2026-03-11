@@ -32,12 +32,16 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Include autoloader and helpers
+// Include autoloader, helpers, and security guard
 require_once __DIR__ . '/core/Autoloader.php';
 require_once __DIR__ . '/helpers/Helper.php';
+require_once __DIR__ . '/core/SecurityMiddleware.php';
 
 // Initialize database connection
 $database = Database::getInstance();
+
+// Check for malicious requests (DDoS protection)
+SecurityMiddleware::check();
 
 // Route handler
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -137,6 +141,7 @@ $routes = [
     'admin' => 'AdminDashboardController@index',
     'admin-dashboard' => 'AdminDashboardController@index',
     'admin-users' => 'AdminDashboardController@users',
+    'admin-user-delete' => 'AdminDashboardController@deleteUser',
     'admin-categories' => 'AdminDashboardController@categories',
     'admin-category-add' => 'AdminDashboardController@addCategory',
     'admin-category-edit' => 'AdminDashboardController@editCategory',

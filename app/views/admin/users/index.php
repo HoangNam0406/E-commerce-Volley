@@ -47,6 +47,7 @@
                                 <th class="px-6 py-3 text-center font-medium">Role</th>
                                 <th class="px-6 py-3 text-center font-medium">Status</th>
                                 <th class="px-6 py-3 text-right font-medium">Joined Date</th>
+                                <th class="px-6 py-3 text-center font-medium">Action</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
@@ -74,6 +75,17 @@ else:
                                     </td>
                                     <td class="px-6 py-4 text-right text-gray-500">
                                         <?php echo date('Y-m-d', strtotime($user['created_at'])); ?>
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        <?php if ($user['id'] !== $_SESSION['user_id']): ?>
+                                            <a href="<?php echo APP_URL; ?>/admin/user-delete/<?php echo $user['id']; ?>" class="text-red-500 hover:text-red-700" onclick="return confirm('Are you sure you want to delete this user?');">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        <?php
+        else: ?>
+                                            <span class="text-gray-300"><i class="fas fa-trash"></i></span>
+                                        <?php
+        endif; ?>
                                     </td>
                                 </tr>
                             <?php

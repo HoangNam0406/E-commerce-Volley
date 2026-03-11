@@ -108,14 +108,77 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="bg-gray-800 rounded-lg shadow p-6 border-l-4 border-cyan-500 text-white">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-sm text-gray-300 mb-1">Traffic Analyzed by AI</p>
+                            <h3 class="text-2xl font-bold text-white"><?php echo number_format($data['totalAnalyzed']); ?> reqs</h3>
+                        </div>
+                        <div class="p-3 bg-gray-700 rounded-full">
+                            <i class="fas fa-shield-alt text-cyan-400 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-red-800 rounded-lg shadow p-6 border-l-4 border-red-500 text-white">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-sm text-gray-300 mb-1">Blocked by AI</p>
+                            <h3 class="text-2xl font-bold text-white"><?php echo number_format($data['totalBlocked']); ?> attempts</h3>
+                        </div>
+                        <div class="p-3 bg-red-700 rounded-full">
+                            <i class="fas fa-ban text-red-400 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- More Dashboard Content here like charts if needed -->
-            <div class="bg-white rounded-lg shadow p-6">
-                <h3 class="text-lg font-bold mb-4">Quick Links</h3>
-                <div class="flex gap-4">
-                    <a href="<?php echo APP_URL; ?>/admin/users" class="btn btn-outline">Manage Users</a>
-                    <a href="<?php echo APP_URL; ?>/admin/categories" class="btn btn-outline">Manage Categories</a>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <div class="flex gap-4">
+                        <a href="<?php echo APP_URL; ?>/admin/users" class="btn btn-outline">Manage Users</a>
+                        <a href="<?php echo APP_URL; ?>/admin/categories" class="btn btn-outline">Manage Categories</a>
+                    </div>
+                </div>
+
+                <!-- Recent AI Blocks -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                        <i class="fas fa-shield-virus text-red-500"></i> Recent AI Blocks
+                    </h3>
+                    
+                    <?php if (empty($data['recentBlocks'])): ?>
+                        <p class="text-gray-500 text-sm">No malicious activity detected recently.</p>
+                    <?php
+else: ?>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-2">IP Address</th>
+                                        <th class="px-4 py-2">Requests/10s</th>
+                                        <th class="px-4 py-2">Interval</th>
+                                        <th class="px-4 py-2 text-right">Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($data['recentBlocks'] as $block): ?>
+                                    <tr class="border-b">
+                                        <td class="px-4 py-2 font-medium text-red-600"><?php echo htmlspecialchars($block['ip_address']); ?></td>
+                                        <td class="px-4 py-2"><?php echo $block['requests_count']; ?></td>
+                                        <td class="px-4 py-2"><?php echo number_format($block['avg_interval'], 2); ?>s</td>
+                                        <td class="px-4 py-2 text-right text-gray-500"><?php echo date('H:i:s d/m', strtotime($block['created_at'])); ?></td>
+                                    </tr>
+                                    <?php
+    endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php
+endif; ?>
                 </div>
             </div>
 
